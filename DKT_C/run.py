@@ -34,7 +34,7 @@ print("=====================================================")
 
 
 dkt = DKT(NUM_QUESTIONS, HIDDEN_SIZE, NUM_LAYERS)
-train_skills_all, train_pred_all, train_truth_all = dkt.train(train_loader, epoch=100)
+train_skills_all, train_pred_all, train_truth_all = dkt.train(train_loader, epoch=1000)
 dkt.save("dkt.params")
 dkt.load("dkt.params")
 print("test_loader:", test_loader)
@@ -54,9 +54,3 @@ train_truth_data_path = 'D:\Files\experiment\\20220305\\train_truth_all.txt'
 with open(train_truth_data_path, "w") as f_pred:
     f_pred.write(str(train_truth_all))
 
-# print('train_skills_all:', train_skills_all)
-# print('train_pred_all:', train_pred_all)
-# print('train_truth_all:', train_truth_all)
-# print('eval_pred_all:', eval_pred_all)
-# print('eval_truth_all:', eval_truth_all)
-# print('eval_truth_all:', eval_skills_all)

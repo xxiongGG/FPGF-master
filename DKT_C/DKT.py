@@ -1,6 +1,3 @@
-# coding: utf-8
-# 2021/4/23 @ zengxiaonan
-
 import logging
 
 import numpy as np
@@ -47,12 +44,11 @@ def process_raw_pred(raw_question_matrix, raw_pred, num_questions: int) -> tuple
     pred = raw_pred[: length]
     # 动态调整为一维向量，保证元素个数不变
     pred = pred.gather(1, questions.view(-1, 1)).flatten()
-    # 如果索引数大于123说明当前题目做对了，//num_questions=1；反之如果小于123，说明做错了
+    # 如果索引数大于123说明当前题目做对了
     truth = torch.nonzero(raw_question_matrix)[1:, 1] // num_questions
     skills = torch.nonzero(raw_question_matrix)[0:, 1] % num_questions
     print("skills:", skills)
-    # print("process_raw_pred pred:", pred)
-    # print("process_raw_pred truth:", truth)
+
     return pred, truth, skills
 
 
@@ -62,8 +58,7 @@ class DKT():
         self.num_questions = num_questions
         self.dkt_model = Net(num_questions, hidden_size, num_layers)
 
-    # batch_size = 64
-    # epoch = 2
+
     def train(self, train_data, test_data=None, *, epoch: int, lr=0.002) -> ...:
         count = 0
         loss_function = nn.BCELoss()
@@ -73,15 +68,13 @@ class DKT():
         train_skills_all = []
         for e in range(epoch):
             losses = []
-            # 7次batch
+
             for batch in tqdm.tqdm(train_data, "Epoch %s" % e):
-                # batch[student]: torch.Size([50, 246])
+
                 integrated_pred = self.dkt_model(batch)
                 batch_size = batch.shape[0]
                 loss = torch.Tensor([0.0])
-                # if e == epoch - 1:
-                #     print("========最后一次训练========")
-                #     print(batch_size)  # 64
+
                 for student in range(batch_size):
                     pred, truth, skills = process_raw_pred(batch[student], integrated_pred[student], self.num_questions)
                     count = count + 1
@@ -102,7 +95,7 @@ class DKT():
                 auc = self.eval(test_data)
                 print("[Epoch %d] auc: %.6f" % (e, auc))
 
-        # 共409个学生，64*6+25
+
         count = count / 2
         print("total students count is:%s" % count)
         return train_skills_all, train_pred_all, train_truth_all
