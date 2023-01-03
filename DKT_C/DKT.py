@@ -24,8 +24,7 @@ class Net(nn.Module):
 
 
 def process_raw_pred(raw_question_matrix, raw_pred, num_questions: int) -> tuple:
-    # raw_question_matrix.size()=[50,246]
-    # torch.nonzero(raw_question_matrix)是当前学生交互的问题的索引
+
     '''
     torch.nonzero(raw_question_matrix): tensor([[ 0, 14],
         [ 1, 14],
@@ -33,7 +32,7 @@ def process_raw_pred(raw_question_matrix, raw_pred, num_questions: int) -> tuple
         [ 3, 14],
         [ 4, 14]])
     '''
-    # torch.nonzero(raw_question_matrix)[1:, 1]取除了第0个之外的所有问题
+
     # num_questions 最大questions数量
     questions = torch.nonzero(raw_question_matrix)[1:, 1] % num_questions
     '''
@@ -44,7 +43,7 @@ def process_raw_pred(raw_question_matrix, raw_pred, num_questions: int) -> tuple
     pred = raw_pred[: length]
     # 动态调整为一维向量，保证元素个数不变
     pred = pred.gather(1, questions.view(-1, 1)).flatten()
-    # 如果索引数大于123说明当前题目做对了
+
     truth = torch.nonzero(raw_question_matrix)[1:, 1] // num_questions
     skills = torch.nonzero(raw_question_matrix)[0:, 1] % num_questions
     print("skills:", skills)
