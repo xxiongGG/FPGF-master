@@ -62,8 +62,7 @@ class DKT():
         self.num_questions = num_questions
         self.dkt_model = Net(num_questions, hidden_size, num_layers)
 
-    # batch_size = 64
-    # epoch = 2
+
     def train(self, train_data, test_data=None, *, epoch: int, lr=0.002) -> ...:
         count = 0
         loss_function = nn.BCELoss()

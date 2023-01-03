@@ -34,7 +34,7 @@ print("=====================================================")
 
 
 dkt = DKT(NUM_QUESTIONS, HIDDEN_SIZE, NUM_LAYERS)
-train_skills_all, train_pred_all, train_truth_all = dkt.train(train_loader, epoch=100)
+train_skills_all, train_pred_all, train_truth_all = dkt.train(train_loader, epoch=1000)
 dkt.save("dkt.params")
 dkt.load("dkt.params")
 print("test_loader:", test_loader)
